@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBADT Project</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button {
+            margin-top: 5px;
+        }
+
+        th, tr, td {
+            text-align: center;
+            border: 3px solid #ddd;
+            height: 30px;
+        }
+        input[type="checkbox"]:not(:checked) + label {
+            text-decoration: line-through;
+        }
+    </style>
+    <header>
+        <h1>How does the economy of a country affect it's undernourished?</h1>
+    </header>
+    <p>In theory, if a country gets richer then less of their people should be undernourished. However, many factors can still play a part like wealth
+        disparity, corruption or overpopulation. My theory is that there will be lesser undernourished people as the countries' GDP increases but still 
+        have a substantial amount of undernourished people.
+    </p>
+    Filter by:
+    <div>
+        <form id="filter-form" method="POST" action="/">
+            <label><input type="checkbox" class="toggleColumn" name="columns" value="country_name" <%= Object.keys(data[0]).includes("country_name") ? "checked" : "" %>> Country Name:</label>
+            <% if (!Object.keys(data[0]).includes("country_name")) { %>
+                <label><input type="checkbox" class="toggleCountryName" name="countryNames" value="Afghanistan"> Afghanistan</label>
+                <label><input type="checkbox" class="toggleCountryName" name="countryNames" value="Bangladesh"> Bangladesh</label>
+                <label><input type="checkbox" class="toggleCountryName" name="countryNames" value="India"> India</label>
+                <label><input type="checkbox" class="toggleCountryName" name="countryNames" value="Nepal"> Nepal</label>
+                <label><input type="checkbox" class="toggleCountryName" name="countryNames" value="Pakistan"> Pakistan</label>
+                <label><input type="checkbox" class="toggleCountryName" name="countryNames" value="Sri Lanka"> Sri Lanka</label>
+            <% } else { %>
+                <label><input type="checkbox" class="toggleCountryName" name="countryNames" value="Afghanistan" <%= selectedCountries.includes("Afghanistan") ? "checked" : "" %>> Afghanistan</label>
+                <label><input type="checkbox" class="toggleCountryName" name="countryNames" value="Bangladesh" <%= selectedCountries.includes("Bangladesh") ? "checked" : "" %>> Bangladesh</label>
+                <label><input type="checkbox" class="toggleCountryName" name="countryNames" value="India" <%= selectedCountries.includes("India") ? "checked" : "" %>> India</label>
+                <label><input type="checkbox" class="toggleCountryName" name="countryNames" value="Nepal" <%= selectedCountries.includes("Nepal") ? "checked" : "" %>> Nepal</label>
+                <label><input type="checkbox" class="toggleCountryName" name="countryNames" value="Pakistan" <%= selectedCountries.includes("Pakistan") ? "checked" : "" %>> Pakistan</label>
+                <label><input type="checkbox" class="toggleCountryName" name="countryNames" value="Sri Lanka" <%= selectedCountries.includes("Sri Lanka") ? "checked" : "" %>> Sri Lanka</label>
+            <% } %>
+            <br>
+            <label><input type="checkbox" class="toggleColumn" name="columns" value="year" <%= Object.keys(data[0]).includes("year") ? "checked" : "" %>> Year</label>
+            <label><input type="checkbox" class="toggleColumn" name="columns" value="gdp" <%= Object.keys(data[0]).includes("gdp") ? "checked" : "" %>> GDP</label>
+            <label><input type="checkbox" class="toggleColumn" name="columns" value="gdp_growth" <%= Object.keys(data[0]).includes("gdp_growth") ? "checked" : "" %>> GDP Growth</label>
+            <label><input type="checkbox" class="toggleColumn" name="columns" value="gdp_per_capita" <%= Object.keys(data[0]).includes("gdp_per_capita") ? "checked" : "" %>> GDP Per Capita</label>
+            <label><input type="checkbox" class="toggleColumn" name="columns" value="unemployment_percentage" <%= Object.keys(data[0]).includes("unemployment_percentage") ? "checked" : "" %>> Unemployment %</label>
+            <label><input type="checkbox" class="toggleColumn" name="columns" value="pop_total" <%= Object.keys(data[0]).includes("pop_total") ? "checked" : "" %>> Population Total</label>
+            <label><input type="checkbox" class="toggleColumn" name="columns" value="pop_growth" <%= Object.keys(data[0]).includes("pop_growth") ? "checked" : "" %>> Population Growth</label>
+            <label><input type="checkbox" class="toggleColumn" name="columns" value="life_expectancy" <%= Object.keys(data[0]).includes("life_expectancy") ? "checked" : "" %>> Life Expectancy</label>
+            <label><input type="checkbox" class="toggleColumn" name="columns" value="infant_mortality_rate" <%= Object.keys(data[0]).includes("infant_mortality_rate") ? "checked" : "" %>> Infant Mortality Rate</label>
+            <label><input type="checkbox" class="toggleColumn" name="columns" value="num_of_undernourished" <%= Object.keys(data[0]).includes("num_of_undernourished") ? "checked" : "" %>> No. of Undernourished</label>
+            <br><button type="submit">Apply Filters</button>
+        </form>
+    </div>
+    <table id="data-table">
+        <tr>
+            <th>No.</th>
+            <% Object.keys(data[0]).forEach(function(row) { %>
+                <th class="<%= row %>"><%= row %></th>
+            <% }); %>
+        </tr>
+        <% data.forEach(function(item, index) { %>
+            <tr>
+                <td><%= index + 1 %></td>
+                <% Object.entries(item).forEach(function([key, value]) { %>
+                <td class="<%= key %>">
+                    <%= key === 'gdp_growth' || key === 'gdp_per_capita' || key === 'pop_growth' ? value.toFixed(3) : value %>
+                </td>
+                <% }); %>
+            </tr>
+        <% }); %>
+    </table>
+</body>
+</html>
